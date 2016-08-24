@@ -28,12 +28,20 @@ def allotted_hours():
     ah_xlsx = os.path.join('tables', 'allotted_hours.xlsx')
     
     ah_df = pd.read_excel(ah_xlsx)
-    ah_df = pd.melt(ah_df, id_vars=['mso', 'offering', 'notes'], var_name='month_year', value_name='allotted_hours')
-    ah_df = ah_df[['month_year', 'mso', 'offering', 'notes', 'allotted_hours']]
+    ah_df = pd.melt(ah_df, id_vars=['mso', 'offering', 'provider', 'notes', 'offering_rollup', 'type', 'default_hours'], var_name='month_year', value_name='allotted_hours')
+    ah_df = ah_df[['month_year', 'mso', 'offering', 'offering_rollup', 'default_hours', 'notes', 'allotted_hours']]
 
-    ah_df = ah_df.sort_values(['month_year', 'mso'])
+
+
+    #multiply default_hours x allotted_hours
+    ah_df['allotted_hours'] = ah_df['allotted_hours'] * ah_df['default_hours']
+
+
+    ah_df = ah_df.sort_values(['month_year', 'mso']).reset_index(drop=True)
 
     return ah_df
+    #print (ah_df)
+    #ah_df.to_excel('test123.xlsx')
 
 
 #Refreshes my tables in my sqlite db that i can edit on my own
@@ -49,5 +57,5 @@ def refresh_tables():
     print ('Excel tables refreshed to SQLite!')
 
 
-
 refresh_tables()
+allotted_hours()
