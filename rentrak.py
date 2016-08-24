@@ -5,7 +5,7 @@ import numpy as np
 import os, re, calendar, datetime
 
 from grab_table import Grab_Data
-from tools import mso_dict, sql_update, refresh_tables
+from tools import mso_dict, sql_update
 
 
 base_dir = os.path.abspath(os.path.abspath(os.path.dirname(__file__)))
@@ -162,11 +162,11 @@ class Rentrak:
 #Uncomment everything so that the tables reformat
 grabby.login()
 
-for x in ['201607']:
+for x in ['201601','201602','201603','201604', '201605', '201606']:
     rentrak = Rentrak(x)
     rentrak.provider_perf()
     rentrak.comp_perf()
-    #rentrak.title_perf()
+    rentrak.title_perf()
 
 grabby.logout()
 
