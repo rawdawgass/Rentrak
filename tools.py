@@ -46,8 +46,8 @@ def allotted_hours():
 
 #Refreshes my tables in my sqlite db that i can edit on my own
 def refresh_tables():
-    network_df = pd.read_excel(os.path.join('tables', 'Network_IDs.xlsx'), 'network_ids')
-    default_avg_price_df = pd.read_excel(os.path.join('tables', 'Network_IDs.xlsx'), 'default_avg_price')
+    network_df = pd.read_excel(os.path.join('tables', 'allotted_hours.xlsx'), 'network_ids')
+    default_avg_price_df = pd.read_excel(os.path.join('tables', 'allotted_hours.xlsx'), 'default_avg_price')
     allotted_hours_df = allotted_hours()
 
     network_df.to_sql('network_id', engine, flavor='sqlite', if_exists='replace', index=False)

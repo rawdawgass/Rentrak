@@ -30,7 +30,6 @@ class Rentrak:
 
     def provider_perf(self):
         for mso in mso_dict:
-            sql_update('provider_perf', self.month_year, mso)
             mso_code = ';subsystem_filter=mso_no%2C{}'.format(mso_dict[mso])
             url = base_url + provider_perf_url + self.date_range + mso_code
             #url = base_url + network_perf_url + self.date_range + mso_code            
@@ -42,7 +41,9 @@ class Rentrak:
                 extract_df['mso'] = mso
                 extract_df['month_year'] = self.month_year
 
-            #print (extract_df)
+
+                sql_update('provider_perf', self.month_year, mso)
+
                 extract_df.to_sql('provider_perf', engine, flavor='sqlite', if_exists='append', index=False)
             except AttributeError:
                 pass
@@ -55,7 +56,6 @@ class Rentrak:
 
     def comp_perf(self):        
         for mso in mso_dict:
-            sql_update('comp_perf', self.month_year, mso)
             mso_code = ';subsystem_filter=mso_no%2C{}'.format(mso_dict[mso])
             url = base_url + comp_perf_url + self.date_range + mso_code
             #print (url)
@@ -67,6 +67,7 @@ class Rentrak:
                 extract_df['month_year'] = self.month_year
 
             #print (extract_df)
+                sql_update('comp_perf', self.month_year, mso)
                 extract_df.to_sql('comp_perf', engine, flavor='sqlite', if_exists='append', index=False)
                 print ('{} extracted'.format(mso))
             except AttributeError:
@@ -78,7 +79,6 @@ class Rentrak:
 
     def title_perf(self):
         for mso in mso_dict:
-            sql_update('title_perf', self.month_year, mso)
             mso_code = ';subsystem_filter=mso_no%2C{}'.format(mso_dict[mso])
             url = base_url + title_perf_url + self.date_range + mso_code
             #print (url)
@@ -95,6 +95,8 @@ class Rentrak:
                 extract_df['title_id'] = extract_df['warehouse_href'].map(lambda x: re.findall('title_no=(.+?);', x)[0])
                 extract_df['provider_id'] = extract_df['warehouse_href'].map(lambda x: re.findall('provider_no=(.+?);', x)[0])
 
+
+                sql_update('title_perf', self.month_year, mso)
                 extract_df.to_sql('title_perf', engine, flavor='sqlite', if_exists='append', index=False)
                 print ('{} extracted'.format(mso))
             
@@ -162,11 +164,11 @@ class Rentrak:
 #Uncomment everything so that the tables reformat
 grabby.login()
 
-for x in ['201601','201602','201603','201604', '201605', '201606']:
+for x in ['201601','201602','201603','201604', '201605', '201606', '201607']:
     rentrak = Rentrak(x)
     rentrak.provider_perf()
     rentrak.comp_perf()
-    rentrak.title_perf()
+    #rentrak.title_perf()
 
 grabby.logout()
 
